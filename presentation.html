@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Project Hub - Presentation</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-secondary: #818cf8;
+      --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+      --success: #34d399;
+      --warning: #fbbf24;
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation / Status */
+    header {
+      height: 52px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+      background-color: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .project-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: #334155;
+      border-color: var(--accent);
+    }
+
+    .slide-counter {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Main Presentation Stage */
+    main {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .slide {
+      position: absolute;
+      width: 92%;
+      max-width: 1180px;
+      height: 86%;
+      max-height: 720px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 40px 48px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px) scale(0.98);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      z-index: 5;
+    }
+
+    /* Slide Typography */
+    .slide-badge {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 4px 12px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .slide-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .slide-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* Content Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex: 1;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      flex: 1;
+    }
+
+    .feature-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(56, 189, 248, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 1.6rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .bullet-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    .bullet-icon {
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .code-pill {
+      font-family: monospace;
+      font-size: 0.85rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* Workflow Step Cards */
+    .workflow-container {
+      display: flex;
+      align-items: stretch;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .workflow-step {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .step-number {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.15);
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      width: fit-content;
+      margin-bottom: 10px;
+    }
+
+    .step-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .step-body {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Speaker Notes Drawer */
+    .speaker-notes-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #020617;
+      border-top: 2px solid var(--accent);
+      padding: 16px 28px;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 50;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .speaker-notes-panel.open {
+      transform: translateY(0);
+    }
+
+    .speaker-notes-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .speaker-notes-content {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    /* Progress bar */
+    .progress-bar-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: transparent;
+      z-index: 100;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--accent-gradient);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Print styles for PDF export */
+    @media print {
+      body {
+        overflow: visible;
+        height: auto;
+        background: #fff;
+        color: #000;
+      }
+      header, .progress-bar-container, .speaker-notes-panel {
+        display: none !important;
+      }
+      main {
+        display: block;
+        padding: 0;
+      }
+      .slide {
+        position: relative;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        page-break-after: always;
+        height: 100vh;
+        width: 100vw;
+        max-width: none;
+        max-height: none;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        background: #fff;
+        color: #0f172a;
+      }
+      .slide-title {
+        color: #0f172a;
+        -webkit-text-fill-color: initial;
+      }
+      .feature-card, .workflow-step {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        color: #0f172a;
+      }
+      .card-title, .step-title {
+        color: #0f172a;
+      }
+      .bullet-item {
+        color: #334155;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <header>
+    <div class="project-title">
+      <span style="font-size: 1.2rem;">🎓</span>
+      <span>College Project Hub</span>
+    </div>
+    <div class="nav-controls">
+      <button class="btn" id="prevBtn" title="Previous Slide (←)">◀ Prev</button>
+      <span class="slide-counter" id="slideCounter">1 / 14</span>
+      <button class="btn" id="nextBtn" title="Next Slide (→)">Next ▶</button>
+      <button class="btn" id="toggleNotesBtn" title="Toggle Speaker Notes (N)">🎙️ Notes</button>
+      <button class="btn" onclick="window.print()" title="Print / Export as PDF (Ctrl+P)">📄 PDF</button>
+      <button class="btn" id="fsBtn" title="Toggle Fullscreen (F)">⛶ Fullscreen</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Slide 1: Title Slide -->
+    <div class="slide active" data-notes="Good morning/afternoon respected examiners, professors, and peers. Today, we are presenting 'College Project Hub', a centralized, full-stack platform built on the MERN architecture to digitize, streamline, evaluate, and showcase collegiate academic projects.">
+      <span class="slide-badge">Final Semester Capstone Presentation</span>
+      <h1 class="slide-title">College Project Hub</h1>
+      <p class="slide-subtitle">A Unified Academic Project Management, Multi-Criteria Evaluation & Showcase Ecosystem</p>
+      
+      <div style="margin-top: auto; display: grid; grid-template-columns: 2fr 1fr; gap: 24px; padding-top: 20px; border-top: 1px solid var(--card-border);">
+        <div>
+          <h4 style="color: var(--accent); margin-bottom: 8px;">Key Innovations:</h4>
+          <p style="color: var(--text-muted); line-height: 1.6;">
+            • Hierarchical Academic Data Structure (Year &rarr; Section &rarr; Team &rarr; Project)<br>
+            • One-Time Verification & Single-Submission Lock Protocol<br>
+            • 4-Tier Rubric Scoring (Technical Approach, Idea, Design Thinking, UI/UX)<br>
+            • Automated Instant Scorecard Dispatch via Nodemailer
+          </p>
+        </div>
+        <div style="background: rgba(15,23,42,0.6); padding: 16px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 0.9rem;">
+          <div style="color: var(--text-muted); margin-bottom: 4px;">Technology Stack:</div>
+          <div style="font-weight: 600; color: #fff;">MERN Stack (MongoDB, Express, React, Node.js) + Tailwind CSS + JWT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: Problem Statement -->
+    <div class="slide" data-notes="Every semester, institutions struggle with managing dozens of student project groups. Traditionally, submissions happen over unstructured Google Sheets, WhatsApp groups, or email attachments. Scores are stored in disparate files with no standardized rubrics, leading to delayed grading, lost repository links, and zero long-term archival for junior students or recruiters.">
+      <span class="slide-badge">The Motivation</span>
+      <h2 class="slide-title">Problem Statement & Institutional Challenges</h2>
+      <p class="slide-subtitle">Current project management processes in higher education suffer from fragmentation and lack of governance.</p>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="card-icon">📂</div>
+          <div class="card-title">Disorganized Submissions</div>
+          <div class="card-desc">Spreadsheets, emails, and drive folders create duplicate versions, broken GitHub links, and missing documentation.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">⚖️</div>
+          <div class="card-title">Subjective & Unstandardized Grading</div>
+          <div class="card-desc">Absence of standardized scoring rubrics leads to opaque faculty grading with zero automated feedback loops to student leads.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">🔒</div>
+          <div class="card-title">Orphaned Projects & Zero Showcase</div>
+          <div class="card-desc">Once graded, projects remain hidden on local drives. Juniors cannot explore past innovations, and recruiters cannot verify project authenticity.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Proposed Solution -->
+    <div class="slide" data-notes="To solve these bottlenecks, we designed College Project Hub. It delivers a 360-degree solution: structured academic hierarchy setup by faculty, credential verification for team leads, anti-duplicate submission lock, 4-pillar rubric grading, and a beautiful public showcase portal.">
+      <span class="slide-badge">The Solution</span>
+      <h2 class="slide-title">The Proposed Solution & System Objectives</h2>
+      <p class="slide-subtitle">A standardized web-based platform bridging students, faculty, and public discovery.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="card-icon">🏛️</div>
+          <div class="card-title">Rigorous Academic Hierarchy</div>
+          <div class="card-desc">Faculty configure Academic Years, Sections, and Team Rosters. Each team lead receives auto-generated credentials to preserve isolation and accountability.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">🔒</div>
+          <div class="card-title">Tamper-Proof Submission Lock</div>
+          <div class="card-desc">Team leads verify credentials and submit repository links and abstracts. The interface immediately locks to prevent post-deadline tampering.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Multi-Pillar Rubric Scoring</div>
+          <div class="card-desc">Faculty evaluate across Technical Approach, Idea, Design Thinking, and UI/UX with granular sliders, leaving feedback that automatically dispatches to students.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">🌟</div>
+          <div class="card-title">Public Institutional Showcase</div>
+          <div class="card-desc">An interactive showcase with dynamic Year and Section filters, allowing juniors, faculty, and recruiters to inspect vetted projects and evaluation badges.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: System Architecture -->
+    <div class="slide" data-notes="Here is our end-to-end architecture. The frontend is built on React with Vite and Tailwind CSS. The backend runs on Node.js and Express with RESTful endpoints, protected by JWT authentication and bcrypt. Our persistence layer uses MongoDB Mongoose with custom cascading deletion logic. We also integrate Nodemailer for automated transactional emails.">
+      <span class="slide-badge">System Design</span>
+      <h2 class="slide-title">Full-Stack System Architecture</h2>
+      <p class="slide-subtitle">Decoupled client-server MERN stack architecture with secure RESTful APIs.</p>
+
+      <div class="grid-3" style="align-items: stretch;">
+        <div class="feature-card" style="border-top: 4px solid var(--accent);">
+          <div class="card-title">1. Presentation Tier (Frontend)</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">▸</span>React 18 + Vite for high-performance SPA</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Tailwind CSS for responsive UI design</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Context API for Teacher & Team Lead session state</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Axios Interceptor for automatic JWT authorization</li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-top: 4px solid var(--accent-secondary);">
+          <div class="card-title">2. Application Tier (Backend)</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Express.js RESTful API endpoints</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Authentication: bcrypt password hashing + JWT tokens</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Cascade Delete utilities to maintain data integrity</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Nodemailer transactional email micro-service</li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-top: 4px solid var(--success);">
+          <div class="card-title">3. Data & Communication Tier</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">▸</span>MongoDB document database</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Mongoose ODM schemas with relational references</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>SMTP Email Server (Gmail App Password / Local fallback)</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Cross-Origin Resource Sharing (CORS) secured</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Data Models & Schema Design -->
+    <div class="slide" data-notes="Data integrity was a paramount priority. We defined five core Mongoose models: Academic Year, Section, Team, Project, and Teacher. A key architectural feat is our cascadeDelete utility: deleting a Year safely cascades down to its Sections, Teams, and Projects, avoiding orphan records and database corruption.">
+      <span class="slide-badge">Database Design</span>
+      <h2 class="slide-title">Relational Hierarchy & Mongoose Models</h2>
+      <p class="slide-subtitle">Structured data modeling ensuring strict referential integrity and safe cascading operations.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="card-title">Entity Relationships</div>
+          <div style="font-family: monospace; font-size: 0.9rem; line-height: 1.8; color: var(--accent); margin-top: 8px;">
+            Year (e.g., 2024-2025)<br>
+            └── Section (e.g., CSE-A)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;└── Team (Roster, Lead Email, Auto-Credential)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── Project (Title, Repo, Rubric Scores, Status)
+          </div>
+          <div style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
+            Isolated <span class="code-pill">Teacher</span> schema handles faculty credentials with bcrypt hashing and JWT generation.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-title">Cascade Delete Utility (<span class="code-pill">cascadeDelete.js</span>)</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">✔</span><strong>Year Removal:</strong> Deletes dependent sections, teams, and associated project artifacts.</li>
+            <li class="bullet-item"><span class="bullet-icon">✔</span><strong>Section Removal:</strong> Purges all teams and submissions belonging strictly to that branch.</li>
+            <li class="bullet-item"><span class="bullet-icon">✔</span><strong>Team Removal:</strong> Cleans up orphaned project records and invalidates credentials.</li>
+            <li class="bullet-item"><span class="bullet-icon">✔</span><strong>No Dirty Reads:</strong> Eliminates broken references on the public showcase cards.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: User Roles & RBAC -->
+    <div class="slide" data-notes="The platform enforces clear separation of concerns across three distinct user roles: Administrators/Faculty, Student Team Leads, and Public Viewers. This ensures strict role-based access control and confidentiality.">
+      <span class="slide-badge">Access Control</span>
+      <h2 class="slide-title">Role-Based Access Control (RBAC)</h2>
+      <p class="slide-subtitle">Ensuring security, isolation, and purpose-driven user interfaces.</p>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="card-icon">👨‍🏫</div>
+          <div class="card-title">Faculty / Evaluator</div>
+          <ul class="bullet-list" style="margin-top: 8px;">
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Full 6-tab management dashboard</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Add & configure Years, Sections, Teams</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Generate and dispatch team credentials</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Rubric scoring with qualitative feedback</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-icon">🎓</div>
+          <div class="card-title">Student Team Lead</div>
+          <ul class="bullet-list" style="margin-top: 8px;">
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Credentials verification gateway</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Upload project title, abstract & repo</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Single-submission lock mechanism</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Instant email notification with scorecard</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Public / Recruiter</div>
+          <ul class="bullet-list" style="margin-top: 8px;">
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Search and filter projects by Year/Section</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>View project descriptions & GitHub repos</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Inspect evaluation badges & scorecards</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Zero login required for public showcase</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Complete Operational Workflow -->
+    <div class="slide" data-notes="Let's trace the complete operational lifecycle: First, faculty sets up the academic hierarchy. Second, credentials are automatically created and emailed. Third, the student lead verifies and submits. Fourth, faculty grades via the rubric modal. Fifth, the project is badged and displayed on the public showcase.">
+      <span class="slide-badge">Operational Flow</span>
+      <h2 class="slide-title">End-to-End Operational Lifecycle</h2>
+      <p class="slide-subtitle">A seamless 5-stage automated journey from institutional setup to public showcase.</p>
+
+      <div class="workflow-container">
+        <div class="workflow-step">
+          <span class="step-number">Step 01</span>
+          <div class="step-title">Hierarchy Setup</div>
+          <div class="step-body">Faculty logs in and creates the Academic Year, Branch/Section, and registers Team names with Lead Email.</div>
+        </div>
+
+        <div class="workflow-step">
+          <span class="step-number">Step 02</span>
+          <div class="step-title">Credential Generation</div>
+          <div class="step-body">System auto-generates a secure password and emails the team lead with login instructions.</div>
+        </div>
+
+        <div class="workflow-step">
+          <span class="step-number">Step 03</span>
+          <div class="step-title">Project Submission</div>
+          <div class="step-body">Team lead verifies credentials at <span class="code-pill">/upload</span>, inputs GitHub URL and abstract. Form permanently locks.</div>
+        </div>
+
+        <div class="workflow-step">
+          <span class="step-number">Step 04</span>
+          <div class="step-title">Rubric Evaluation</div>
+          <div class="step-body">Faculty accesses "Unrated Projects", scores the 4 criteria sliders, adds remarks, and submits.</div>
+        </div>
+
+        <div class="workflow-step">
+          <span class="step-number">Step 05</span>
+          <div class="step-title">Scorecard & Showcase</div>
+          <div class="step-body">Scorecard emails immediately to the student. Project moves to public showcase with a verified badge.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Faculty Portal & Academic Management -->
+    <div class="slide" data-notes="The Teacher Dashboard is the administrative nerve center. It provides a tabbed workspace where faculty can seamlessly manage Academic Years, Sections, and Student Teams, track submission status in real-time, and trigger evaluations without clutter.">
+      <span class="slide-badge">Core Feature 1</span>
+      <h2 class="slide-title">Faculty Portal & Academic Management</h2>
+      <p class="slide-subtitle">Comprehensive 6-tab dashboard giving educators centralized control.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="card-title">Dashboard Tab Architecture</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">1.</span><strong>Academic Hierarchy:</strong> Add/manage Years & Sections with validation.</li>
+            <li class="bullet-item"><span class="bullet-icon">2.</span><strong>Team Rosters:</strong> Register leads, manage member lists, generate credentials.</li>
+            <li class="bullet-item"><span class="bullet-icon">3.</span><strong>Submission Tracker:</strong> Real-time overview of pending vs submitted teams.</li>
+            <li class="bullet-item"><span class="bullet-icon">4.</span><strong>Unrated Projects Queue:</strong> Direct access to newly submitted work.</li>
+            <li class="bullet-item"><span class="bullet-icon">5.</span><strong>Rated Projects Archive:</strong> Searchable repository of evaluated projects.</li>
+            <li class="bullet-item"><span class="bullet-icon">6.</span><strong>Faculty Account Settings:</strong> Secure password changes and profile data.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-title">Smart Credential Provisioning</div>
+          <p class="card-desc">When a faculty adds a team, the backend creates an isolated credential set:</p>
+          <div style="background: rgba(15,23,42,0.8); border: 1px solid var(--card-border); border-radius: 8px; padding: 14px; margin-top: 10px; font-family: monospace; font-size: 0.85rem; color: var(--accent);">
+            Team: Team Alpha<br>
+            Section: CSE-A | Year: 2024-2025<br>
+            Lead Email: lead@college.edu<br>
+            Auto Password: [Generated 8-char Secure Token]
+          </div>
+          <p class="card-desc" style="margin-top: 10px;">
+            Dispatched via <span class="code-pill">emailTemplates.js</span> or printed to the terminal console during local testing.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Team Lead Submission & Lock Protocol -->
+    <div class="slide" data-notes="To guarantee academic honesty and prevent post-deadline alterations, we implemented a 2-step verification and locked submission protocol. Once submitted, the interface locks down and blocks further modifications.">
+      <span class="slide-badge">Core Feature 2</span>
+      <h2 class="slide-title">Team Lead Verification & Submission Lock</h2>
+      <p class="slide-subtitle">Preventing duplicate entries, late tampering, and unauthorized modifications.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="card-title">Phase 1: Verification Gate</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Student navigates to <span class="code-pill">/upload</span>.</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Enters registered Lead Email and auto-generated password.</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Backend verifies team existence, academic year, and checks if project is already submitted.</li>
+            <li class="bullet-item"><span class="bullet-icon">▸</span>Unlocks project submission form only upon successful match.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-title">Phase 2: Immutable Submission Lock</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">🔒</span><strong>Immediate Lockout:</strong> Once the submit button is triggered, the project is saved with state <span class="code-pill">status: 'submitted'</span>.</li>
+            <li class="bullet-item"><span class="bullet-icon">🔒</span><strong>Duplicate Prevention:</strong> Subsequent login attempts alert the student: <em>"Project already submitted and locked for evaluation."</em></li>
+            <li class="bullet-item"><span class="bullet-icon">🔒</span><strong>Academic Integrity:</strong> Protects against race conditions and post-review code swaps.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Multi-Criteria Rubric Scoring -->
+    <div class="slide" data-notes="One of our most appreciated features is the standardized rubric scoring model. Instead of arbitrary grades, faculty evaluate projects across four standardized criteria with interactive range sliders.">
+      <span class="slide-badge">Core Feature 3</span>
+      <h2 class="slide-title">Standardized Multi-Criteria Rubric Scoring</h2>
+      <p class="slide-subtitle">Transparent, balanced evaluation with quantitative metrics and qualitative feedback.</p>
+
+      <div class="grid-4">
+        <div class="feature-card">
+          <div class="card-title" style="color: var(--accent);">1. Technical Approach</div>
+          <div class="card-desc">Code quality, architectural robustness, backend security, algorithmic efficiency, and database schema design.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-title" style="color: var(--accent-secondary);">2. Idea & Innovation</div>
+          <div class="card-desc">Novelty of solution, domain relevance, problem-solving capability, and practical real-world utility.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-title" style="color: var(--warning);">3. Design Thinking</div>
+          <div class="card-desc">Modularity, edge-case handling, system maintainability, cascading integrity, and extensibility.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-title" style="color: var(--success);">4. UI & UX Polish</div>
+          <div class="card-desc">User interface responsiveness, accessibility, intuitive workflow navigation, and visual feedback.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; background: rgba(15,23,42,0.6); padding: 18px; border-radius: 12px; border: 1px solid var(--card-border);">
+        <strong style="color: #fff;">Faculty Feedback Modal (<span class="code-pill">RatingModal.jsx</span>):</strong>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 6px;">
+          Includes a dedicated remarks textarea for constructive critique. When saved, the project automatically transitions from the "Unrated" queue to "Rated Projects", triggers a badge, and fires the email dispatcher.
+        </p>
+      </div>
+    </div>
+
+    <!-- Slide 11: Automated Email Feedback Loop -->
+    <div class="slide" data-notes="We integrated Nodemailer with responsive HTML templates. The moment a teacher rates a project, the student lead receives a comprehensive digital scorecard in their inbox, fostering transparency and instant feedback.">
+      <span class="slide-badge">Core Feature 4</span>
+      <h2 class="slide-title">Automated Notification & Scorecard Dispatch</h2>
+      <p class="slide-subtitle">Closing the evaluation feedback loop with responsive HTML emails.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="card-title">Responsive HTML Templates (<span class="code-pill">emailTemplates.js</span>)</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">✉</span>Clean, mobile-responsive HTML layout with institution branding.</li>
+            <li class="bullet-item"><span class="bullet-icon">✉</span>Itemized breakdown of all 4 rubric scores out of 10/25.</li>
+            <li class="bullet-item"><span class="bullet-icon">✉</span>Aggregated final grade percentage and faculty remarks.</li>
+            <li class="bullet-item"><span class="bullet-icon">✉</span>Direct link to the project's public scorecard page.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-title">Dual-Mode Dispatch Architecture</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">⚡</span><strong>Production Mode:</strong> Uses real SMTP credentials (e.g. Gmail App Password, AWS SES) for live mailbox delivery.</li>
+            <li class="bullet-item"><span class="bullet-icon">⚡</span><strong>Development Mode:</strong> Features a simulated fallback logger that displays formatted emails in terminal logs without requiring active SMTP keys.</li>
+            <li class="bullet-item"><span class="bullet-icon">⚡</span>Zero blocker during offline viva or laboratory demonstrations.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Public Showcase Portal -->
+    <div class="slide" data-notes="The public showcase at / is open to everyone without needing authentication. Juniors can explore past years' best projects, filter by section or branch, and inspect GitHub repositories and faculty evaluation badges.">
+      <span class="slide-badge">Core Feature 5</span>
+      <h2 class="slide-title">Public Project Showcase & Discovery Portal</h2>
+      <p class="slide-subtitle">Creating an enduring digital repository of departmental research and engineering.</p>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="card-icon">🔍</div>
+          <div class="card-title">Multi-Tier Filters</div>
+          <div class="card-desc">Instant dynamic filtering by Academic Year (e.g. 2024-2025) and Section (e.g. CSE-A, CSE-B), powered by React client-side hooks.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">🎴</div>
+          <div class="card-title">Interactive Project Cards</div>
+          <div class="card-desc"><span class="code-pill">ProjectCard.jsx</span> highlights project title, team name, abstract excerpt, GitHub repository badge, and evaluation status.</div>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">🏅</div>
+          <div class="card-title">Detailed Scorecard Preview</div>
+          <div class="card-desc"><span class="code-pill">ProjectDetails.jsx</span> renders the full rubric scorecard, faculty remarks, and verified evaluation badge for rated submissions.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 13: Security & Architectural Best Practices -->
+    <div class="slide" data-notes="Security and resilience were baked in from day one. We use industry-standard bcrypt hashing for faculty passwords, stateless JWT tokens passed via Axios interceptors, CORS policies, environment variable isolation, and defensive cascading deletions.">
+      <span class="slide-badge">Security & Quality</span>
+      <h2 class="slide-title">Security, Performance & Architectural Resilience</h2>
+      <p class="slide-subtitle">Adopting enterprise-grade patterns for privacy, reliability, and data consistency.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="card-title">Authentication & Access Control</div>
+          <ul class="bullet-list" style="margin-top: 8px;">
+            <li class="bullet-item"><span class="bullet-icon">🔐</span><strong>Bcrypt Password Hashing:</strong> Salted password encryption prevents credential theft in database breaches.</li>
+            <li class="bullet-item"><span class="bullet-icon">🔐</span><strong>Stateless JWT:</strong> Bearer tokens verify faculty identity across protected REST endpoints.</li>
+            <li class="bullet-item"><span class="bullet-icon">🔐</span><strong>Axios Interceptors:</strong> Automatically attaches JWT authorization headers to all authenticated outgoing requests.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-title">Data Integrity & Reliability</div>
+          <ul class="bullet-list" style="margin-top: 8px;">
+            <li class="bullet-item"><span class="bullet-icon">🛡️</span><strong>Cascading Deletion Guards:</strong> Removes orphan records when years or sections are deleted.</li>
+            <li class="bullet-item"><span class="bullet-icon">🛡️</span><strong>Single Submission Lockdown:</strong> Eliminates duplicate submissions or race conditions.</li>
+            <li class="bullet-item"><span class="bullet-icon">🛡️</span><strong>Defensive Error Handlers:</strong> Graceful API responses with meaningful HTTP status codes.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 14: Future Scope & Conclusion -->
+    <div class="slide" data-notes="In conclusion, College Project Hub solves real administrative pain points and bridges academia with modern software standards. Looking ahead, we plan to integrate automated code similarity/plagiarism checking, Docker preview sandboxes, and exportable PDF certificates. Thank you! We now welcome any questions.">
+      <span class="slide-badge">Roadmap & Conclusion</span>
+      <h2 class="slide-title">Future Scope & Concluding Summary</h2>
+      <p class="slide-subtitle">Transforming project management into a continuous institutional asset.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="card-title" style="color: var(--accent);">Future Roadmap & Scalability</div>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li class="bullet-item"><span class="bullet-icon">🔮</span><strong>AI / Plagiarism Detection:</strong> Code similarity analysis and GitHub repository commit verification.</li>
+            <li class="bullet-item"><span class="bullet-icon">🔮</span><strong>Live Sandbox Previews:</strong> Containerized Docker iframe previews for instant web app testing.</li>
+            <li class="bullet-item"><span class="bullet-icon">🔮</span><strong>PDF Certificate Generator:</strong> Auto-generation of signed departmental project completion certificates.</li>
+            <li class="bullet-item"><span class="bullet-icon">🔮</span><strong>Departmental Analytics:</strong> Score distribution charts, section comparisons, and rubric heatmaps.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card" style="justify-content: center; text-align: center; background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(99,102,241,0.1));">
+          <div style="font-size: 2.4rem; margin-bottom: 12px;">🎉</div>
+          <div class="card-title" style="font-size: 1.4rem;">Thank You!</div>
+          <p class="card-desc" style="max-width: 400px; margin: 8px auto 20px auto;">
+            College Project Hub successfully eliminates administrative friction, enforces objective grading, and honors student innovation.
+          </p>
+          <div style="display: inline-block; padding: 8px 20px; border-radius: 999px; background: rgba(56,189,248,0.2); color: var(--accent); font-weight: 600; font-size: 0.95rem;">
+            Questions & Answers Open
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Speaker Notes Drawer -->
+  <div class="speaker-notes-panel" id="notesPanel">
+    <div class="speaker-notes-title">🎙️ Speaker Notes (What to say aloud)</div>
+    <div class="speaker-notes-content" id="notesContent"></div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const slideCounter = document.getElementById('slideCounter');
+    const progressBar = document.getElementById('progressBar');
+    const notesPanel = document.getElementById('notesPanel');
+    const notesContent = document.getElementById('notesContent');
+    const toggleNotesBtn = document.getElementById('toggleNotesBtn');
+    const fsBtn = document.getElementById('fsBtn');
+
+    let currentIndex = 0;
+
+    function updateSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= slides.length) index = slides.length - 1;
+      currentIndex = index;
+
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === currentIndex);
+      });
+
+      slideCounter.textContent = `${currentIndex + 1} / ${slides.length}`;
+      progressBar.style.width = `${((currentIndex + 1) / slides.length) * 100}%`;
+
+      const currentSlide = slides[currentIndex];
+      notesContent.textContent = currentSlide.getAttribute('data-notes') || 'No notes for this slide.';
+
+      prevBtn.disabled = (currentIndex === 0);
+      nextBtn.disabled = (currentIndex === slides.length - 1);
+    }
+
+    prevBtn.addEventListener('click', () => updateSlide(currentIndex - 1));
+    nextBtn.addEventListener('click', () => updateSlide(currentIndex + 1));
+
+    toggleNotesBtn.addEventListener('click', () => {
+      notesPanel.classList.toggle('open');
+    });
+
+    fsBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        updateSlide(currentIndex + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        updateSlide(currentIndex - 1);
+      } else if (e.key.toLowerCase() === 'n') {
+        notesPanel.classList.toggle('open');
+      } else if (e.key.toLowerCase() === 'f') {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    });
+
+    updateSlide(0);
+  </script>
+</body>
+</html>
+
